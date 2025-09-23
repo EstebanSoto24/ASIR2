@@ -4,7 +4,7 @@ CREATE PROCEDURE proc4()
 BEGIN
 DECLARE var1 INT DEFAULT 0;
     bucle: LOOP
-        IF MOD(var1/2) = 1 THEN
+        IF MOD(var1,2) = IF THEN
             SELECT var1;
         END IF;
         IF var1 > 10 THEN
