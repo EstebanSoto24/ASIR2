@@ -7,7 +7,7 @@ CREATE PROCEDURE cursor2.3;
 BEGIN
 
 # Decalración de variables
-DECLARE vcodigo_cliente, vdni, lrf INT;
+DECLARE vcodigo_cliente, vdni, lrf, vslado INT;
 DECLARE vnombre,vapellido1,vapellido2,vdireccion,vregion VARCHAR(50);
 
 # Declaración de cursores
@@ -30,15 +30,17 @@ OPEN cclientes;
         END IF;
         OPEN ccuentas;
             lcuentas: LOOP
-                FETCH ccuentas INTO cod_cuentas, saldo;
+                FETCH ccuentas INTO vcodigo_cliente, vsaldo;
                 IF lrf = 1 THEN
                     LEAVE lcuentas;
                 END IF;
             END LOOP;
-            SET cont = 0;
+            SELECT CONCAT('El usuario con el nombre ', vnombre, ' y apellidos ', vapellido1, vapellido2, ' con direccion ', vdireccion, ' y region ', vregion, ' con dni ', vdni, ' tiene una cuenta con ', vsaldo, ' y su codigo es ', vcodigo_cliente) AS 'RESULTADO'
         CLOSE ccuentas;
-    END LOOP;
+        SET lrf = 0
+    END LOOP
 CLOSE cclientes;
+
 
 
 END; $$
