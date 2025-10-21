@@ -1,0 +1,12 @@
+DELIMITER $$
+DROP EVENT IF EXISTS primer_evento $$
+CREATE EVENT primer_evento ON SCHEDULE EVERY 1 MINUTE DO
+BEGIN
+    INSERT INTO momentos VALUES (NOW());
+    DELETE FROM momentos WHERE  fecha <= DATE_SUB(NOW(), INTERVAL 1 HOUR);
+END; $$
+DELIMITER ;
+
+
+
+
