@@ -1,0 +1,41 @@
+DELIMITER $$
+DROP TABLE IF EXISTS momentos $$
+CREATE TABLE momentos (
+    fecha DATETIME PRIMARY KEY
+)ENGINE=InnoDB;
+
+DROP EVENT IF EXISTS every_minute $$
+CREATE EVENT every_minute ON SCHEDULE EVERY 1 MINUTE
+DO
+BEGIN
+    INSERT INTO momentos VALUES (NOW());
+END; $$
+
+/*
+DROP EVENT IF EXISTS every_second $$
+CREATE EVENT every_second ON SCHEDULE EVERY 1 SECOND
+DO
+BEGIN
+    INSERT INTO momentos VALUES (NOW());
+END; $$
+*/
+
+DROP EVENT IF EXISTS diario_sup_1000 $$
+CREATE EVENT diario_sup_1000 ON SCHEDULE EVERY 1 DAY
+DO
+BEGIN
+    INSERT INTO temp 
+    SELECT *
+    FROM movimientos
+    WHERE saldo > 1000;
+END; $$
+
+DROP EVENT IF EXISTS final_mes $$
+CREATE EVENT final_mes ON EVERY 1 MONTH
+STARTS last_day(now())
+DO
+BEGIN
+    UPDATE 
+    INSERT INTO transacciones VALUES (123123,NOW(),50)
+END $$
+DELIMITER ;

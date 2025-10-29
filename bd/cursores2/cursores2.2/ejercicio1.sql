@@ -47,6 +47,5 @@ OPEN ctiendas;
     END LOOP;
 CLOSE ctiendas;
 
-
 END; $$
 DELIMITER ;

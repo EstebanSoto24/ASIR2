@@ -1,51 +1,53 @@
 DELIMITER $$
-USE ejemplo $$
-DROP PROCEDURE IF EXISTS ejer1 $$
-CREATE PROCEDURE ejer1
+USE motorblog $$
+DROP PROCEDURE IF EXISTS notis_noviembre $$
+CREATE PROCEDURE notis_noviembre()
 BEGIN
 # Decalración de variables
-DECLARE lrf BOOLEAN;
-DECLARE cont, result, autor_result INT;
-DECLARE autor VARCHAR(50);
+DECLARE lrf BOOL;
+DECLARE v_cont, v_result, v_autor INT;
+DECLARE v_login, v_login_result VARCHAR(60);
 
 # Declaración de cursores
-DECLARE CURSOR autor FOR
-SELECT id_autor INTO autor
+DECLARE c_autor CURSOR FOR
+SELECT id_autor, login
 FROM autores;
 
-DECLARE CURSOR noticias FOR
-SELECT id_autor
+DECLARE c_noticias CURSOR FOR
+SELECT autor_id
 FROM noticias
-WHERE id_autor = autor AND MONTH(fecha) = 11;
+WHERE autor_id = v_autor AND MONTH(fecha_pub) = 11;
 
 # Declaración control de errores
 DECLARE CONTINUE HANDLER FOR NOT FOUND SET lrf = 1;
 
 SET lrf = 0;
-SET cont = 0;
+SET v_cont = 0;
+SET v_result = 0;
 
-OPEN autor;
-    autor: LOOP
-        FETCH autor INTO autor;
-        OPEN noticias;
-            noticias: LOOP
-                FETCH noticias INTO autor;
-                IF lrf = 1 THEN
-                    LEAVE noticias;
-                END IF;
-                SET cont = cont + 1;
-            END LOOP;
-            IF cont > result THEN
-                SET result = cont
-                SET autor_result = autor; 
-            END IF;
-            SET cont = 0;
-        CLOSE noticias;
+OPEN c_autor;
+    b_autor: LOOP
+        FETCH c_autor INTO v_autor, v_login;
         IF lrf = 1 THEN
-            LEAVE autor;
+            LEAVE b_autor;
         END IF;
+        OPEN c_noticias;
+            b_noticias: LOOP
+                FETCH c_noticias INTO v_autor;
+                IF lrf = 1 THEN
+                    LEAVE b_noticias;
+                END IF;
+                SET v_cont = v_cont + 1;
+            END LOOP;
+            IF v_cont > v_result THEN
+                SET v_result = v_cont;
+                SET v_login_result = v_login; 
+            END IF;
+            SET v_cont = 0;
+        CLOSE c_noticias;
+        SET lrf = 0;
     END LOOP;
-CLOSE autor;
-
+CLOSE c_autor;
+SELECT CONCAT('El autor ',v_login_result,' es el que más noticias subio en noviembre, con un total de ', v_result) AS 'RESULTADO';
 END; $$
 DELIMITER ;
