@@ -1,0 +1,8 @@
+DELIMITER $$
+DROP EVENT IF EXISTS evento_completo1;
+CREATE EVENT evento_completo1 ON SCHEDULE EVERY 1 QUARTER
+DO
+BEGIN
+    CALL completo1();
+END; $$
+DELIMITER ;

@@ -1,0 +1,8 @@
+DELIMITER $$
+USE prueba1 $$
+DROP TRIGGER IF EXISTS completo1;
+CREATE TRIGGER trigger_completo1 BEFORE DELETE ON usuarios FOR EACH ROW
+BEGIN
+    INSERT INTO historicos VALUES (OLD.DNI,OLD.Nombre,OLD.apellidos,CURRENT_DATE());
+END; $$
+DELIMITER ;
